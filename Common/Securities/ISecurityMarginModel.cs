@@ -47,15 +47,6 @@ namespace QuantConnect.Securities
         decimal GetMaintenanceMargin(Security security);
 
         /// <summary>
-        /// Gets the margin cash available for a trade
-        /// </summary>
-        /// <param name="portfolio">The algorithm's portfolio</param>
-        /// <param name="security">The security to be traded</param>
-        /// <param name="direction">The direction of the trade</param>
-        /// <returns>The margin available for the trade</returns>
-        decimal GetMarginRemaining(SecurityPortfolioManager portfolio, Security security, OrderDirection direction);
-
-        /// <summary>
         /// The percentage of the holding's absolute cost that must be held in free cash in order to avoid a margin call
         /// </summary>
         decimal GetMaintenanceMarginRequirement(Security security);

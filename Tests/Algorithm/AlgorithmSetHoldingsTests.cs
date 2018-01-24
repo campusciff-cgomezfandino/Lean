@@ -37,6 +37,11 @@ namespace QuantConnect.Tests.Algorithm
             {
                 return base.GetInitialMarginRequiredForOrder(security, order);
             }
+
+            public new decimal GetMarginRemaining(SecurityPortfolioManager portfolio, Security security, OrderDirection direction)
+            {
+                return base.GetMarginRemaining(portfolio, security, direction);
+            }
         }
 
         public enum Position { Zero = 0, Long = 1, Short = -1 }
@@ -158,7 +163,7 @@ namespace QuantConnect.Tests.Algorithm
                 orderDirection = initialPosition == Position.Long ? OrderDirection.Buy : OrderDirection.Sell;
                 orderQuantity = algorithm.CalculateOrderQuantity(_symbol, targetPercentage);
                 order = new MarketOrder(_symbol, orderQuantity, DateTime.UtcNow);
-                freeMargin = algorithm.Portfolio.GetMarginRemaining(_symbol, orderDirection);
+                freeMargin = marginModel.GetMarginRemaining(algorithm.Portfolio, security, orderDirection);
                 requiredMargin = marginModel.GetInitialMarginRequiredForOrder(security, order);
 
                 //Console.WriteLine("Current price: " + security.Price);
@@ -201,7 +206,7 @@ namespace QuantConnect.Tests.Algorithm
             orderDirection = finalPosition == Position.Long || (finalPosition == Position.Zero && initialPosition == Position.Short) ? OrderDirection.Buy : OrderDirection.Sell;
             orderQuantity = algorithm.CalculateOrderQuantity(_symbol, targetPercentage);
             order = new MarketOrder(_symbol, orderQuantity, DateTime.UtcNow);
-            freeMargin = algorithm.Portfolio.GetMarginRemaining(_symbol, orderDirection);
+            freeMargin = marginModel.GetMarginRemaining(algorithm.Portfolio, security, orderDirection);
             requiredMargin = marginModel.GetInitialMarginRequiredForOrder(security, order);
 
             //Console.WriteLine("Current price: " + security.Price);

@@ -37,6 +37,11 @@ namespace QuantConnect.Tests.Common.Securities
             {
                 return base.GetInitialMarginRequiredForOrder(security, order);
             }
+
+            public new decimal GetMarginRemaining(SecurityPortfolioManager portfolio, Security security, OrderDirection direction)
+            {
+                return base.GetMarginRemaining(portfolio, security, direction);
+            }
         }
 
         [Test]
@@ -104,21 +109,22 @@ namespace QuantConnect.Tests.Common.Securities
             portfolio.MarginCallModel = MarginCallModel.Null;
 
             var security = GetSecurity(Symbols.AAPL);
-            security.MarginModel = new SecurityMarginModel(leverage);
+            var marginModel = new TestSecurityMarginModel(leverage);
+            security.MarginModel = marginModel;
             portfolio.Securities.Add(security);
 
             security.Holdings.SetHoldings(1m, quantity);
-            var actual1 = security.MarginModel.GetMarginRemaining(portfolio, security, OrderDirection.Buy);
+            var actual1 = marginModel.GetMarginRemaining(portfolio, security, OrderDirection.Buy);
             Assert.AreEqual(quantity / leverage, actual1);
 
-            var actual2 = security.MarginModel.GetMarginRemaining(portfolio, security, OrderDirection.Sell);
+            var actual2 = marginModel.GetMarginRemaining(portfolio, security, OrderDirection.Sell);
             Assert.AreEqual(quantity, actual2);
 
             security.Holdings.SetHoldings(1m, -quantity);
-            var actual3 = security.MarginModel.GetMarginRemaining(portfolio, security, OrderDirection.Sell);
+            var actual3 = marginModel.GetMarginRemaining(portfolio, security, OrderDirection.Sell);
             Assert.AreEqual(quantity / leverage, actual3);
 
-            var actual4 = security.MarginModel.GetMarginRemaining(portfolio, security, OrderDirection.Buy);
+            var actual4 = marginModel.GetMarginRemaining(portfolio, security, OrderDirection.Buy);
             Assert.AreEqual(quantity, actual4);
         }
 
