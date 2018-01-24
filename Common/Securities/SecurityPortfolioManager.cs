@@ -426,7 +426,7 @@ namespace QuantConnect.Securities
                 {
                     var security = kvp.Value;
 
-                    sum += security.BuyingPowerModel.GetMaintenanceMargin(security);
+                    sum += security.BuyingPowerModel.GetReservedBuyingPowerForPosition(security);
                 }
                 return sum;
             }
